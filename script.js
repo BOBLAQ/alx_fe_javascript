@@ -28,3 +28,30 @@ function addQuote() {
 }
 
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+function exportQuotesToJson() {
+  const blob = new Blob([JSON.stringify(quotes, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'quotes.json';
+  a.click();
+}
+
+function importFromJsonFile(event) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importedQuotes = JSON.parse(e.target.result);
+      if (Array.isArray(importedQuotes)) {
+        quotes.push(...importedQuotes);
+        saveQuotes();
+        alert('Quotes imported successfully!');
+        populateCategories();
+      }
+    } catch (error) {
+      alert("Invalid JSON file.");
+    }
+  };
+  reader.readAsText(event.target.files[0]);
+}
+
