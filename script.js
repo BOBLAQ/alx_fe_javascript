@@ -84,4 +84,9 @@ function filterQuotes() {
     display.textContent = "No quotes in this category.";
   }
 }
+window.onload = () => {
+  populateCategories();
+  filterQuotes();
+};
+
 
