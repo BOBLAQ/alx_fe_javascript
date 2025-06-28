@@ -54,4 +54,34 @@ function importFromJsonFile(event) {
   };
   reader.readAsText(event.target.files[0]);
 }
+function populateCategories() {
+  const categories = [...new Set(quotes.map(q => q.category))];
+  const filter = document.getElementById("categoryFilter");
+  filter.innerHTML = `<option value="all">All Categories</option>`;
+  categories.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    filter.appendChild(option);
+  });
+  // Restore saved category filter
+  const savedFilter = localStorage.getItem("selectedCategory");
+  if (savedFilter) {
+    filter.value = savedFilter;
+    filterQuotes();
+  }
+}
+
+function filterQuotes() {
+  const category = document.getElementById("categoryFilter").value;
+  localStorage.setItem("selectedCategory", category);
+  const display = document.getElementById("quoteDisplay");
+  const filtered = category === "all" ? quotes : quotes.filter(q => q.category === category);
+  if (filtered.length > 0) {
+    const q = filtered[Math.floor(Math.random() * filtered.length)];
+    display.textContent = `"${q.text}" - ${q.category}`;
+  } else {
+    display.textContent = "No quotes in this category.";
+  }
+}
 
